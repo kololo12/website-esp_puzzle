@@ -1,63 +1,106 @@
-| Supported Targets | ESP32 | ESP32-C2 | ESP32-C3 | ESP32-C6 | ESP32-H2 | ESP32-S2 | ESP32-S3 |
-| ----------------- | ----- | -------- | -------- | -------- | -------- | -------- | -------- |
+📡 Secret Scout Messages — WiFi Access Point
+This project creates a hidden WiFi network where users must enter a secret password to "unlock" mysterious scout stories.
 
-# _Hello world example_
+Built using:
 
-This is the simplest buildable example made to be used as a template for new projects running Arduino-esp32 as an ESP-IDF component.
-See [Arduino-esp32](https://components.espressif.com/components/espressif/arduino-esp32) in ESP Registry.
+📶 ESP32 (or ESP8266)
 
-## How to use example
+📜 Arduino framework + FreeRTOS tasks
 
-To create a ESP-IDF project from this example with the latest release of Arduino-esp32, you can simply run command: `idf.py create-project-from-example "espressif/arduino-esp32:hello_world"`.
-ESP-IDF will download all dependencies needed from the component registry and setup the project for you.
+🌐 Captive DNS + Web Server
 
-If you want to use cloned Arduino-esp32 repository, you can build this example directly.
-Go to the example folder `arduino-esp32/idf_component_examples/hello_world`.
-First you need to comment line 6 `pre_release: true` in examples `/main/idf_component.yml`.
-Then just run command: `idf.py build`.
+💡 LED control when the password is correct
 
-## Example folder contents
+✨ Features
+Creates a WiFi hotspot (SSID: jdi_na_tajna.ufo, password 12345678).
 
-The project **hello_world** contains one source file in C++ language [main.cpp](main/main.cpp). The file is located in folder [main](main).
+Custom "secret website" at http://tajna.ufo.
 
-ESP-IDF projects are built using CMake. The project build configuration is contained in `CMakeLists.txt`
-files that provide set of directives and instructions describing the project's source files and targets
-(executable, library, or both).
+Shows a beautiful welcome page with scout conspiracy theories.
 
-Below is short explanation of remaining files in the project folder.
+Asks for a password.
 
-```
-├── CMakeLists.txt
-├── main
-│   ├── CMakeLists.txt
-│   ├── idf_component.yml
-│   └── main.cpp
-└── README.md                  This is the file you are currently reading
-```
+If password is correct:
 
-## How to add Arduino libraries
+Redirects to a success page.
 
-In the project create folder `components/` and clone the library there.
-In the library folder create new CMakeLists.txt file, add lines shown below to the file and edit the SRCS to match the library source files.
+Turns ON an LED on GPIO 18.
 
-```
-idf_component_register(SRCS "user_library.cpp" "another_source.c"
-                      INCLUDE_DIRS "."
-                      REQUIRES arduino-esp32
-                      )
-```
+If password is wrong:
 
-Below is structure of the project folder with the Arduino libraries.
+Redirects to a wrong page.
 
-```
-├── CMakeLists.txt
-├── components
-│   ├── user_library
-│   │   ├── CMakeLists.txt     This needs to be added
-│   │   ├── ...
-├── main
-│   ├── CMakeLists.txt
-│   ├── idf_component.yml
-│   └── main.cpp
-└── README.md                  This is the file you are currently reading
-```
+Increases failed attempt counter (pokusynaheslo).
+
+LED on GPIO 2 blinks continuously to show the server is alive.
+
+📜 How it works
+ESP32 boots up, sets up a WiFi Access Point.
+
+DNS Server redirects all requests to tajna.ufo.
+
+Web Server serves a welcome page and password check form.
+
+When a password is submitted:
+
+Correct password → redirect to success page and activate LED.
+
+Wrong password → redirect to wrong page.
+
+Two FreeRTOS tasks run:
+
+Web server handling
+
+Blinking an LED for heartbeat signal.
+
+🛠 Installation
+Install Arduino IDE (with ESP32 Board Manager).
+
+Clone or download this project.
+
+Install required libraries:
+
+WiFi.h
+WebServer.h
+DNSServer.h
+
+Flash the code to your ESP32.
+
+Connect your device to the WiFi network:
+
+SSID: jdi_na_tajna.ufo
+
+Password: 12345678
+
+Open a browser and navigate to http://tajna.ufo.
+
+🧩 Project Structure
+
+File	Purpose
+main.cpp	Main server and logic code
+html.h	Contains HTML for welcome, success, and wrong pages
+README.md	Project documentation
+⚡ Hardware Requirements
+ESP32 Dev Module (or compatible)
+
+LED + 220Ω resistor connected to GPIO 18 (optional but recommended)
+
+📖 Password Behavior
+Correct password is heslo.
+
+After correct password:
+
+LED on pin 18 turns ON permanently.
+
+Wrong password:
+
+Printed to Serial Monitor.
+
+Redirects to "Wrong Password" page.
+
+📋 License
+MIT License.
+Free to use, modify and share.
+Just don't use it for evil spy stuff 😉.
+
+🛡 Happy Hacking!
