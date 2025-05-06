@@ -1,7 +1,7 @@
 {
     "version":            "1.1",
     "project_name":       "main",
-    "project_version":    "1",
+    "project_version":    "0e4b24d-dirty",
     "project_path":       "F:/jirka/ESP-projekty/hello_world",
     "idf_path":           "F:/jirka/ESP",
     "build_dir":          "F:/jirka/ESP-projekty/hello_world/build",

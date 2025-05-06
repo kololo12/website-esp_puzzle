@@ -51,6 +51,21 @@ const char* welcomePage = R"rawliteral(
         form {
             margin-top: 40px;
         }
+        .nickname-input {
+            padding: 12px;
+            width: 260px;
+            font-size: 16px;
+            border: 2px dashed #f1c40f;
+            border-radius: 8px;
+            background-color: #0b0c10;
+            color: #f1c40f;
+            outline: none;
+            margin-bottom: 20px;
+            box-shadow: 0 0 10px #f1c40f;
+        }
+        .nickname-input::placeholder {
+            color: #f1c40f;
+        }
         input[type=text] {
             padding: 12px;
             width: 260px;
@@ -60,6 +75,7 @@ const char* welcomePage = R"rawliteral(
             background-color: #0b0c10;
             color: #c5c6c7;
             outline: none;
+            margin: 10px 0;
         }
         input[type=text]::placeholder {
             color: #45a29e;
@@ -79,6 +95,11 @@ const char* welcomePage = R"rawliteral(
             background-color: #66fcf1;
             color: #0b0c10;
         }
+        .note {
+            font-size: 1em;
+            color: #f1c40f;
+            margin-top: 20px;
+        }
     </style>
 </head>
 <body>
@@ -86,28 +107,38 @@ const char* welcomePage = R"rawliteral(
     <div class="subtitle">Odhal tajemství ukrytá v lesích...</div>
 
     <div class="theory">
-        <h2>Teorie #1: Záhadná zmizení v Černém lese</h2>
+        <h2>Šifra #1: Záhadná zmizení v Černém lese</h2>
         <p>Nikdo nikdy nevysvětlil, proč skauti v roce 1998 náhle zmizeli během noční výpravy...</p>
+		<p>50 72 6F 70 61 73 74</p>
     </div>
 
     <div class="theory">
-        <h2>Teorie #2: Tajemné šepoty u Borovic</h2>
-        <p>Je slyšet šepot v korunách stromů... některé zprávy mluví o starodávném rituálu skautských strážců.</p>
+        <h2>Šifra #2: Tajemné šepoty u Borovic</h2>
+        <p>„V noci ticho a ve dne se skrývám, v temnu však vždy najdu cestu. Mám zuby, ale ne jím, ať je den či noc, vždy jsem v pohybu. Nepotřebuji oči, abych věděl, co je kolem. Kdo jsem?“</p>
     </div>
 
     <div class="theory">
-        <h2>Teorie #3: Neviditelný průvodce</h2>
-        <p>Říká se, že v určitých nocích skupinu sleduje neviditelný ochránce, který odhání vetřelce.</p>
+        <h2>Šifra #3: Neviditelný průvodce</h2>
+        <p>Říká se, že v určitých nocích skupinu sleduje neviditelný ochránce, který odhání vetřelce. (mimochodem umí čínsky nebo nějak tak...)</p>
+		<p>|||---|--|	,	|-	,	||---|-|	,	--||||-|	,	-|-|||	,	|-||	,	-|||-	,	|||-|-  </p>
     </div>
 
     <form action="/check-password" method="POST">
-        <input type="text" name="password" placeholder="Zadej tajné heslo" required>
-        <br>
+        <input class="nickname-input" type="text" name="nickname" placeholder="Tvoje přezdívka nebo jméno" required><br>
+        <input type="text" name="part1" placeholder="1. část hesla" required><br>
+        <input type="text" name="part2" placeholder="2. část hesla" required><br>
+        <input type="text" name="part3" placeholder="3. část hesla" required><br>
         <input type="submit" value="Ověřit">
     </form>
+
+    <div class="note">
+        <p><strong>Poznámka:</strong> Heslo musí být napsané malými písmeny, bez mezer, háčků a čárek.</p>
+    </div>
 </body>
 </html>
 )rawliteral";
+
+
 
 
 const char* successPage = R"rawliteral(
@@ -141,6 +172,109 @@ const char* wrongPage = R"rawliteral(
 <body>
     <h1>❌ Špatné heslo!</h1> 
     <p>Zkus to znovu...</p>
+    <a href="/">Zpět na hlavní stránku</a>
+</body>
+</html>
+)rawliteral";
+
+const char* adminPageHeader = R"rawliteral(
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Panel – Tajná hra</title>
+    <style>
+        body {
+            font-family: 'Courier New', Courier, monospace;
+            background-color: #0b0c10;
+            color: #c5c6c7;
+            text-align: center;
+            padding: 40px;
+        }
+        h1 {
+            color: #66fcf1;
+            margin-bottom: 20px;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        li {
+            background-color: #1f2833;
+            margin: 10px auto;
+            padding: 15px;
+            border-radius: 10px;
+            max-width: 400px;
+            box-shadow: 0 0 10px #66fcf1;
+        }
+        form {
+            margin-top: 30px;
+        }
+        input[type=submit] {
+            padding: 10px 20px;
+            background-color: #c62828;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        input[type=submit]:hover {
+            background-color: #e53935;
+        }
+    </style>
+</head>
+<body>
+    <h1>🛡️ Admin Panel</h1>
+    <p>Seznam hráčů, kteří dokončili hru:</p>
+    <ul>
+)rawliteral";
+
+const char* adminPageFooter = R"rawliteral(
+    </ul>
+    <form action="/logout" method="POST">
+        <input type="submit" value="Odhlásit admin">
+    </form>
+</body>
+</html>
+)rawliteral";
+
+const char* accessDeniedPage = R"rawliteral(
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>🚫 Přístup zamítnut</title>
+    <style>
+        body {
+            font-family: 'Courier New', Courier, monospace;
+            background-color: #2b2b2b;
+            color: #ff6b6b;
+            text-align: center;
+            padding: 50px;
+        }
+        h1 {
+            font-size: 2.5em;
+        }
+        p {
+            font-size: 1.2em;
+            margin-top: 20px;
+        }
+        a {
+            display: inline-block;
+            margin-top: 30px;
+            color: #66fcf1;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <h1>🚫 Přístup zamítnut</h1>
+    <p>Nemáš oprávnění k zobrazení této stránky.<br>
+    Tlačítko nebylo stisknuto nebo session vypršela.</p>
     <a href="/">Zpět na hlavní stránku</a>
 </body>
 </html>
